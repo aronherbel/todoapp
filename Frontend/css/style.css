@@ -1,0 +1,49 @@
+/* TODO: Set a background color for the body. You can use CSS variables or direct color values. */
+
+body {
+    /* Example using CSS variables:
+       --gray-lightest: #f7f7f7;
+    */
+    background-image: url("https://4kwallpapers.com/images/wallpapers/macos-monterey-stock-blue-light-layers-5k-4480x2520-5898.jpg");
+    
+}
+
+.container {
+    /* TODO: 
+       1. Set a background color for the container. You can use white or any other color of your choice.
+       2. Add some padding around the container for spacing.
+       3. Add a border-radius to make the container's corners rounded.
+       4. Add a subtle box-shadow to give a lifted effect to the container. --> bootstrap
+    */
+    background-color: azure;
+    padding: 2em;
+    border-radius: 2em;
+    margin-top: 3em;
+    margin-bottom: 3em;
+    
+    
+}
+
+.lifted-container {
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+#addIcon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.material-icons{
+    cursor: pointer;
+}
+
+@media(max-width: 320px) {
+
+    .container{
+       margin-right: 10px;
+       margin-left: 10px;
+      
+    }
+    
+}

@@ -1,0 +1,21 @@
+.container{
+    display: block;
+    position: relative;
+    justify-content: center;
+    background-color: aqua;
+    width: 100%;
+    margin: 50px auto 50px auto;
+    padding-top: 2em;
+    padding-bottom: 2em;
+}
+
+.container button{
+   
+    background-color: blue;
+    padding: .5em;
+    border: solid black;
+}
+
+.container input{
+    font-size: 1em;
+}
