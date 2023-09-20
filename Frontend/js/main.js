@@ -1,7 +1,7 @@
 // Start by setting up the mock tasks array and a variable for the current task ID.
 let tasks = [
-    { id: 0, name: "Buy groceries", done: false, priority: false, order: 1 },
-    { id: 1, name: "Go for a run", done: false, priority: false, order: 2}
+    { id: 0, name: "Buy groceries", done: true, priority: false, order: 0 },
+    { id: 1, name: "Go for a run", done: false, priority: false, order: 1}
 ];
 
 /*
@@ -60,18 +60,59 @@ input.addEventListener("keypress", function(event){
 function displayTasks() {
     const taskList = document.getElementById('taskList');
     taskList.innerHTML = ''; // Clear existing tasks
-    tasks.forEach(task => {
-        taskList.innerHTML += `
-            <li class="${ task.done ? 'text-decoration-line-through' : ''} list-group-item d-flex justify-content-between align-items-center">
-                
-                ${task.name}
-                
-                <i class="checkTask material-icons" onclick="checkTask(${task.id})">check</i>
-                <i class="deleteTask material-icons" onclick="deleteTask(${task.id})">remove</i>
+    
+    tasks.forEach(task =>{
+        if(task.priority === true){
+
+            taskList.innerHTML += `
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+            
+            ${task.name}
+            
+            <i class="priorityStarActive priorityTask material-icons" onclick="priorityTask(${task.id})">star</i>
+            <i class="checkTask material-icons" onclick="checkTask(${task.id})">check</i>
+            <i class="deleteTask material-icons" onclick="deleteTask(${task.id})">remove</i>
             </li>
             <hr>
             <br>
-        `;
+            `;
+        }
+    });
+
+    tasks.forEach(task =>{
+        if(task.done === false && task.priority === false){
+
+            taskList.innerHTML += `
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+            
+            ${task.name}
+            
+            <i class="priorityTask material-icons" onclick="priorityTask(${task.id})">star</i>
+            <i class="checkTask material-icons" onclick="checkTask(${task.id})">check</i>
+            <i class="deleteTask material-icons" onclick="deleteTask(${task.id})">remove</i>
+            </li>
+            <hr>
+            <br>
+            `;
+        }
+    });
+    
+    tasks.forEach(task =>{
+        if(task.done === true){
+
+            taskList.innerHTML += `
+            <li class="text-decoration-line-through list-group-item d-flex justify-content-between align-items-center">
+            
+            ${task.name}
+            
+            <i class="priorityTask material-icons" onclick="priorityTask(${task.id})">star</i>
+            <i class="checkTask material-icons" onclick="checkTask(${task.id})">check</i>
+            <i class="deleteTask material-icons" onclick="deleteTask(${task.id})">remove</i>
+            </li>
+            <hr>
+            <br>
+            `;
+        }
     });
 }
 
@@ -158,12 +199,24 @@ function deleteTask(taskId) {
 function checkTask(taskId){
     //tasks[taskId].done = !tasks[taskId].done;
     tasks.find(task => task.id === taskId).done = !tasks.find(task => task.id === taskId).done;
+
+    if(tasks[taskId].priority === true && tasks[taskId].done === true){
+        tasks[taskId].priority = false;
+    }
     console.log(tasks);
     displayTasks();
 }
 
-/*
-function orderTaskPriority(taskId){
+function priorityTask(taskId){
     tasks.find(task => task.id === taskId).priority = !tasks.find(task => task.id === taskId).priority;
-    displayTasks;
-}*/
+
+    if(tasks[taskId].done === true && tasks[taskId].priority === true){
+        tasks[taskId].done = false;
+    }
+
+    console.log(tasks);
+    displayTasks();
+}
+
+
+

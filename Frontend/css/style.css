@@ -56,6 +56,22 @@ body {
 .checkTask:hover{
     color: #5bc0de;
 }
+
+.priorityTask{
+    position: absolute;
+    right: 3.5em;
+}
+
+
+
+.priorityTask:hover{
+    color: #5bc0de;
+}
+
+.priorityStarActive{
+    color: #5bc0de;
+}
+
 @media(max-width: 320px) {
 
     .container{
