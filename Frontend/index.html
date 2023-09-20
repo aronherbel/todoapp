@@ -7,27 +7,41 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 </head>
-<body>
+<body id="body">
     <!-- TODO: Create a centered container for your To-Do App -->
-    <div class="container mx-xl-auto mx-lg-auto mx-md-auto text-center lifted-container">
+    <div id="container" class="container mx-xl-auto mx-lg-auto mx-md-auto text-center lifted-container">
         <h1 class="text-info my-5">Aron'<span class="text-secondary">s </span>To <span class="text-secondary">Do</span></h1>
         <!-- TODO: Create an input group to allow users to add tasks -->
 
         <div class="input-group mb-3">
             <input type="text" id="taskInput" class="form-control border-info border-2 text-center" placeholder="Enter your task...">
             <!-- TODO: Add a button that, when clicked, will add the task from the input to the list. Use the `addTask` function -->
-            <button class="btn btn-info" id="btn-task-add" onclick="addTask()">
+            <button type="button" class="btn btn-info" id="btn-task-add" onclick="addTask()">
                 <i class="material-icons" id="addIcon">add</i>
             </button>
+
+           
+            
         </div>
-        <br>
 
         <!-- TODO: Create an unordered list to display the tasks. Assign an id so you can target it in your script -->
         <div class="list">
             <ul id="taskList">
                 
             </ul>
+        </div>
+    </div>
+
+
+    <div id="inputError" class="toast position-fixed top-0 end-0 p-3 border-danger border-3" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <strong class="me-auto text-danger">Error</strong>
+            <small>now</small>
+        </div>
+        <div class="toast-body text-center">
+             enter your task before you add!
         </div>
     </div>
 

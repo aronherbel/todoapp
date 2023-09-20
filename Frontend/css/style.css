@@ -38,6 +38,24 @@ body {
     cursor: pointer;
 }
 
+.deleteTask{
+    position: absolute;
+    right: .5em;
+    
+}
+
+.checkTask{
+    position: absolute;
+    right: 2em;
+}
+
+.deleteTask:hover{
+    color: #5bc0de;
+}
+
+.checkTask:hover{
+    color: #5bc0de;
+}
 @media(max-width: 320px) {
 
     .container{
