@@ -72,6 +72,12 @@ body {
     color: #5bc0de;
 }
 
+
+.hrSeperating{
+    border: #5bc0de solid;
+    height: 2px;
+}
+
 @media(max-width: 320px) {
 
     .container{
@@ -81,3 +87,4 @@ body {
     }
     
 }
+

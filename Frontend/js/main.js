@@ -1,30 +1,13 @@
 // Start by setting up the mock tasks array and a variable for the current task ID.
 let tasks = [
-    { id: 0, name: "Buy groceries", done: true, priority: false, order: 0 },
-    { id: 1, name: "Go for a run", done: false, priority: false, order: 1}
+    { id: 0, name: "Buy groceries", done: false, priority: false},
+    { id: 1, name: "Go for a run", done: false, priority: false}
 ];
 
-/*
-1 1
-2 2
-3 3
-4 4
 
-2 1
-1 2
-3 3
-4 4
-
-2 1
-3 2
-1 3
-4 4*/
-
-//tasks.find(0).order = 3
-//tasks[1].done = 2
 
 let currentId = tasks.length;
-let currentOrder = tasks.length;
+
 
 // TODO: Initialize the page with tasks by calling the displayTasks function on page load.
 // Hint: Use window.onload
@@ -58,13 +41,19 @@ input.addEventListener("keypress", function(event){
 
 // This function displays the tasks from the mock array onto the webpage.
 function displayTasks() {
+    console.log(tasks);
     const taskList = document.getElementById('taskList');
     taskList.innerHTML = ''; // Clear existing tasks
+    const taskListImportant = document.getElementById('taskListImportant');
+    taskListImportant.innerHTML = ''; // Clear existing tasks
+    const taskListDone = document.getElementById('taskListDone');
+    taskListDone.innerHTML = ''; // Clear existing tasks
     
     tasks.forEach(task =>{
-        if(task.priority === true){
+        if(task.priority === true && task.done === false){
 
-            taskList.innerHTML += `
+            taskListImportant.innerHTML += `
+            
             <li class="list-group-item d-flex justify-content-between align-items-center">
             
             ${task.name}
@@ -74,10 +63,14 @@ function displayTasks() {
             <i class="deleteTask material-icons" onclick="deleteTask(${task.id})">remove</i>
             </li>
             <hr>
-            <br>
             `;
+            let showImportantTask = document.getElementById('listImportant');
+            showImportantTask.classList.remove('d-none');
         }
+        
     });
+
+    
 
     tasks.forEach(task =>{
         if(task.done === false && task.priority === false){
@@ -92,15 +85,16 @@ function displayTasks() {
             <i class="deleteTask material-icons" onclick="deleteTask(${task.id})">remove</i>
             </li>
             <hr>
-            <br>
             `;
+            
         }
     });
     
     tasks.forEach(task =>{
-        if(task.done === true){
+        if(task.done === true && task.priority === false){
 
-            taskList.innerHTML += `
+
+            taskListDone.innerHTML += `
             <li class="text-decoration-line-through list-group-item d-flex justify-content-between align-items-center">
             
             ${task.name}
@@ -110,8 +104,9 @@ function displayTasks() {
             <i class="deleteTask material-icons" onclick="deleteTask(${task.id})">remove</i>
             </li>
             <hr>
-            <br>
             `;
+            let showDoneTask = document.getElementById('listDone');
+            showDoneTask.classList.remove('d-none');
         }
     });
 }
@@ -126,30 +121,28 @@ function addTask() {
     // 2. Create a new task object with an incremented ID and the input value.
 
    
-if(taskInput !== ''){
+    if(taskInput !== ''){
 
-    let task =
-        {
-            id: currentId++, name: taskInput, done : false, priority : false, order: currentOrder++
-           
-        };
-        console.log(task);
-    // 3. Push this task into the tasks array.
-    tasks.push(task);
-    // 4. Display this new task in the task list on the webpage.
+        let task =
+            {
+                id: currentId++, name: taskInput, done : false, priority : false
+            
+            };
+            console.log(task);
+        // 3. Push this task into the tasks array.
+        tasks.push(task);
+        // 4. Display this new task in the task list on the webpage.
+        // 5. Clear the input field.
+        const inputClear = document.getElementById('taskInput');
+        inputClear.value = '';
+        errorFunctionReverse();
+    }else{
+        errorFunction();
+        
+        toastError();
+    }
     displayTasks();
-    // 5. Clear the input field.
-    const inputClear = document.getElementById('taskInput');
-    inputClear.value = '';
-    errorFunctionReverse();
-}
-else{
-    
-    errorFunction();
-    
-    toastError();
-}
-   
+
 }
 
 function errorFunction() {
@@ -200,22 +193,25 @@ function checkTask(taskId){
     //tasks[taskId].done = !tasks[taskId].done;
     tasks.find(task => task.id === taskId).done = !tasks.find(task => task.id === taskId).done;
 
-    if(tasks[taskId].priority === true && tasks[taskId].done === true){
-        tasks[taskId].priority = false;
+    if(tasks.find(task => task.id === taskId).done === true && tasks.find(task => task.id === taskId).priority === true){
+        tasks.find(task => task.id === taskId).priority = false;
+       
     }
-    console.log(tasks);
+   
     displayTasks();
 }
 
 function priorityTask(taskId){
     tasks.find(task => task.id === taskId).priority = !tasks.find(task => task.id === taskId).priority;
 
-    if(tasks[taskId].done === true && tasks[taskId].priority === true){
-        tasks[taskId].done = false;
+    if(tasks.find(task => task.id === taskId).priority === true && tasks.find(task => task.id === taskId).done === true){
+        tasks.find(task => task.id === taskId).done = false;
+       
     }
-
-    console.log(tasks);
+    
     displayTasks();
+
+    
 }
 
 
