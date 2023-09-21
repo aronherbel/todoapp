@@ -109,7 +109,24 @@ function displayTasks() {
             showDoneTask.classList.remove('d-none');
         }
     });
+
+    let doneTaskfalse = tasks.filter(task => task.done === true);
+    let doneTaskfalseCount = doneTaskfalse.length;
+    if(doneTaskfalseCount === 0){
+        let showDoneTask = document.getElementById('listDone');
+            showDoneTask.classList.add('d-none');
+    }
+    let importantTaskfalse = tasks.filter(task => task.priority === true);
+    let importantTaskfalseCount = importantTaskfalse.length;
+    if(importantTaskfalseCount === 0){
+        let showDoneTask = document.getElementById('listImportant');
+            showDoneTask.classList.add('d-none');
+    }
+
+    
+    
 }
+
 
 
 
