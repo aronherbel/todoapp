@@ -78,13 +78,28 @@ body {
     height: 2px;
 }
 
-@media(max-width: 320px) {
+.srvOceLogo{
+    display: flex;
+    align-items: flex-start;
+
+    width: 150px;
+    height: auto;
+    
+}
+
+
+@media(max-width: 426px) {
 
     .container{
-       margin-right: 10px;
-       margin-left: 10px;
+       margin-right: 1em;
+       margin-left: 1em;
       
     }
-    
+    .srvOceLogo{
+        display: flex;
+        justify-content: center;
+        width: 75px;
+        height: auto;
+    }
 }
 

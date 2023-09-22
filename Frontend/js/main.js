@@ -23,7 +23,12 @@ window.addEventListener("load",function(event) {
 
 
 
+
+
 var input = document.getElementById("taskInput");
+
+
+
 
 input.addEventListener("keypress", function(event){
 
@@ -49,6 +54,27 @@ function displayTasks() {
     const taskListDone = document.getElementById('taskListDone');
     taskListDone.innerHTML = ''; // Clear existing tasks
     
+    
+    //for each task that get added do this
+    tasks.forEach(task =>{
+        if(task.done === false && task.priority === false){
+
+            taskList.innerHTML += `
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+            
+            ${task.name}
+            
+            <i class="priorityTask material-icons" onclick="priorityTask(${task.id})">star</i>
+            <i class="checkTask material-icons" onclick="checkTask(${task.id})">check</i>
+            <i class="deleteTask material-icons" onclick="deleteTask(${task.id})">remove</i>
+            </li>
+            <hr>
+            `;
+            
+        }
+    });
+
+    //for each task that is important do this
     tasks.forEach(task =>{
         if(task.priority === true && task.done === false){
 
@@ -69,27 +95,8 @@ function displayTasks() {
         }
         
     });
-
     
-
-    tasks.forEach(task =>{
-        if(task.done === false && task.priority === false){
-
-            taskList.innerHTML += `
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-            
-            ${task.name}
-            
-            <i class="priorityTask material-icons" onclick="priorityTask(${task.id})">star</i>
-            <i class="checkTask material-icons" onclick="checkTask(${task.id})">check</i>
-            <i class="deleteTask material-icons" onclick="deleteTask(${task.id})">remove</i>
-            </li>
-            <hr>
-            `;
-            
-        }
-    });
-    
+    // for each task wich is done do this
     tasks.forEach(task =>{
         if(task.done === true && task.priority === false){
 
@@ -110,12 +117,17 @@ function displayTasks() {
         }
     });
 
+    //Remove Done List if none of the Tasks Done 
+
     let doneTaskfalse = tasks.filter(task => task.done === true);
     let doneTaskfalseCount = doneTaskfalse.length;
     if(doneTaskfalseCount === 0){
         let showDoneTask = document.getElementById('listDone');
             showDoneTask.classList.add('d-none');
     }
+
+    //Remove Important List if none of the Tasks are important
+
     let importantTaskfalse = tasks.filter(task => task.priority === true);
     let importantTaskfalseCount = importantTaskfalse.length;
     if(importantTaskfalseCount === 0){
@@ -208,10 +220,13 @@ function deleteTask(taskId) {
 
 function checkTask(taskId){
     //tasks[taskId].done = !tasks[taskId].done;
-    tasks.find(task => task.id === taskId).done = !tasks.find(task => task.id === taskId).done;
 
-    if(tasks.find(task => task.id === taskId).done === true && tasks.find(task => task.id === taskId).priority === true){
-        tasks.find(task => task.id === taskId).priority = false;
+    let taskToCheck = tasks.find(task => task.id === taskId);
+
+    taskToCheck.done = !taskToCheck.done;
+
+    if(taskToCheck.done === true && taskToCheck.priority === true){
+        taskToCheck.priority = false;
        
     }
    
@@ -219,12 +234,16 @@ function checkTask(taskId){
 }
 
 function priorityTask(taskId){
-    tasks.find(task => task.id === taskId).priority = !tasks.find(task => task.id === taskId).priority;
 
-    if(tasks.find(task => task.id === taskId).priority === true && tasks.find(task => task.id === taskId).done === true){
-        tasks.find(task => task.id === taskId).done = false;
-       
-    }
+    let taskToPriority = tasks.find(task => task.id === taskId);
+
+    taskToPriority.priority = !taskToPriority.priority;
+
+
+
+    if(taskToPriority.priority === true && taskToPriority.done === true){
+        taskToPriority.done = false;
+        }
     
     displayTasks();
 
