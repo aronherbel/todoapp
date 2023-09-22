@@ -38,10 +38,26 @@ input.addEventListener("keypress", function(event){
     
 });
 
+let isImportant = false;
+let isDone = false;
 
-
-
-
+function createTaskHTML(task, isImportant, isDone) {
+    return `
+      <li class="${isDone ? 'text-decoration-line-through' : ''} list-group-item d-flex justify-content-between align-items-center">
+        ${task.name}
+        <i class="${isImportant ? 'priorityStarActive' : ''} priorityTask material-icons" onclick="priorityTask(${task.id})">star</i>
+        <i class="checkTask material-icons" onclick="checkTask(${task.id})">check</i>
+        <i class="${isDone ? 'priorityTaskActive' : ''} deleteTask material-icons" onclick="deleteTask(${task.id})">remove</i>
+      </li>
+      <hr>
+    `;
+  }
+  
+  
+  
+  
+  
+  
 
 
 // This function displays the tasks from the mock array onto the webpage.
@@ -57,65 +73,26 @@ function displayTasks() {
     
     //for each task that get added do this
     tasks.forEach(task =>{
-        if(task.done === false && task.priority === false){
 
-            taskList.innerHTML += `
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-            
-            ${task.name}
-            
-            <i class="priorityTask material-icons" onclick="priorityTask(${task.id})">star</i>
-            <i class="checkTask material-icons" onclick="checkTask(${task.id})">check</i>
-            <i class="deleteTask material-icons" onclick="deleteTask(${task.id})">remove</i>
-            </li>
-            <hr>
-            `;
-            
-        }
-    });
-
-    //for each task that is important do this
-    tasks.forEach(task =>{
-        if(task.priority === true && task.done === false){
-
-            taskListImportant.innerHTML += `
-            
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-            
-            ${task.name}
-            
-            <i class="priorityStarActive priorityTask material-icons" onclick="priorityTask(${task.id})">star</i>
-            <i class="checkTask material-icons" onclick="checkTask(${task.id})">check</i>
-            <i class="deleteTask material-icons" onclick="deleteTask(${task.id})">remove</i>
-            </li>
-            <hr>
-            `;
-            let showImportantTask = document.getElementById('listImportant');
-            showImportantTask.classList.remove('d-none');
-        }
-        
-    });
     
-    // for each task wich is done do this
-    tasks.forEach(task =>{
-        if(task.done === true && task.priority === false){
+        
+    if (task.done === false && task.priority === false) {
+    
+      taskList.innerHTML += createTaskHTML(task, task.priority, task.done);
+      
+    } else if (task.priority === true && task.done === false) {
+        
+      taskListImportant.innerHTML += createTaskHTML(task, task.priority, task.done);
+      let showImportantTask = document.getElementById('listImportant');
+      showImportantTask.classList.remove('d-none');
+    } else if (task.done === true && task.priority === false) {
+      
+      taskListDone.innerHTML += createTaskHTML(task, task.priority, task.done);
 
-
-            taskListDone.innerHTML += `
-            <li class="text-decoration-line-through list-group-item d-flex justify-content-between align-items-center">
-            
-            ${task.name}
-            
-            <i class="priorityTask material-icons" onclick="priorityTask(${task.id})">star</i>
-            <i class="checkTask material-icons" onclick="checkTask(${task.id})">check</i>
-            <i class="deleteTask material-icons" onclick="deleteTask(${task.id})">remove</i>
-            </li>
-            <hr>
-            `;
-            let showDoneTask = document.getElementById('listDone');
-            showDoneTask.classList.remove('d-none');
-        }
-    });
+      let showDoneTask = document.getElementById('listDone');
+      showDoneTask.classList.remove('d-none');
+    }
+  });
 
     //Remove Done List if none of the Tasks Done 
 
