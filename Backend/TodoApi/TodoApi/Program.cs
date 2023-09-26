@@ -1,9 +1,18 @@
-using Microsoft.EntityFrameworkCore;
 using TodoApi;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
+using MySql.EntityFrameworkCore.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
+
+
+var dbConnectionString = builder.Configuration["ConnectionStrings:myServerConnection"];
+
 const string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
-builder.Services.AddDbContext<TodoDb>(opt => opt.UseInMemoryDatabase("TodoList"));
+
+builder.Services.AddDbContext<TodoDb>(options =>
+    options.UseMySQL(dbConnectionString));
+
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddCors(options =>
 {
@@ -15,6 +24,7 @@ builder.Services.AddCors(options =>
                           .AllowAnyMethod();
                       });
 });
+
 var app = builder.Build();
 app.UseCors(MyAllowSpecificOrigins);
 app.UseDefaultFiles();
@@ -34,7 +44,7 @@ app.Run();
 
 static async Task<IResult> GetAllTodos(TodoDb db)
 {
-    return TypedResults.Ok(await db.Todos.Select(x => new TodoItemDTO(x)).ToArrayAsync());
+    return TypedResults.Ok(await db.Todos.Select(x => new TodoItemDTO(x)).ToListAsync());
 }
 
 static async Task<IResult> GetDoneTodos(TodoDb db)

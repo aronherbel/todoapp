@@ -6,6 +6,5 @@
         public string Name { get; set; }
         public bool IsDone { get; set; }
         public bool IsPriority { get; set; }
-        public string? Secret { get; set; }
     }
 }
