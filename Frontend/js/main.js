@@ -1,21 +1,33 @@
 // Start by setting up the mock tasks array and a variable for the current task ID.
-let tasks = [
-    { id: 0, name: "Buy groceries", done: false, priority: false},
-    { id: 1, name: "Go for a run", done: false, priority: false}
-];
+const uri = 'https://localhost:7140/todoitems';
+let tasks = [];
 
-
-
-let currentId = tasks.length;
 
 
 // TODO: Initialize the page with tasks by calling the displayTasks function on page load.
 // Hint: Use window.onload
-
-
-window.addEventListener("load",function(event) {
-    displayTasks();
+async function fetchData(){
+    try {
+        
+        const response = await fetch('https://localhost:7140/todoitems');
+        
+        if (!response.ok) {
+          throw new Error('Die Anfrage war nicht erfolgreich.');
+        }
     
+        const data = await response.json();
+        console.log(data);
+        tasks =  data;
+      } catch (error) {
+        console.error('Fehler beim Abrufen der Daten:', error);
+      }
+}
+
+
+window.addEventListener("load",async function(event) {
+ 
+    await fetchData();
+    displayTasks();
     });
   
 
@@ -38,14 +50,13 @@ input.addEventListener("keypress", function(event){
     
 });
 
-let isImportant = false;
-let isDone = false;
 
-function createTaskHTML(task, isImportant, isDone) {
+
+function createTaskHTML(task, isPriority, isDone) {
     return `
       <li class="${isDone ? 'text-decoration-line-through' : ''} list-group-item d-flex justify-content-between align-items-center">
         ${task.name}
-        <i class="${isImportant ? 'priorityStarActive' : ''} priorityTask material-icons" onclick="priorityTask(${task.id})">star</i>
+        <i class="${isPriority ? 'priorityStarActive' : ''} priorityTask material-icons" onclick="priorityTask(${task.id})">star</i>
         <i class="checkTask material-icons" onclick="checkTask(${task.id})">check</i>
         <i class="${isDone ? 'priorityTaskActive' : ''} deleteTask material-icons" onclick="deleteTask(${task.id})">remove</i>
       </li>
@@ -62,7 +73,6 @@ function createTaskHTML(task, isImportant, isDone) {
 
 // This function displays the tasks from the mock array onto the webpage.
 function displayTasks() {
-    console.log(tasks);
     const taskList = document.getElementById('taskList');
     taskList.innerHTML = ''; // Clear existing tasks
     const taskListImportant = document.getElementById('taskListImportant');
@@ -70,24 +80,20 @@ function displayTasks() {
     const taskListDone = document.getElementById('taskListDone');
     taskListDone.innerHTML = ''; // Clear existing tasks
     
-    
-    //for each task that get added do this
     tasks.forEach(task =>{
 
+    if (task.isDone === false && task.isPriority === false) {
     
-        
-    if (task.done === false && task.priority === false) {
-    
-      taskList.innerHTML += createTaskHTML(task, task.priority, task.done);
+      taskList.innerHTML += createTaskHTML(task, task.isPriority, task.isDone);
       
-    } else if (task.priority === true && task.done === false) {
+    } else if (task.isPriority === true && task.isDone === false) {
         
-      taskListImportant.innerHTML += createTaskHTML(task, task.priority, task.done);
+      taskListImportant.innerHTML += createTaskHTML(task, task.isPriority, task.isDone);
       let showImportantTask = document.getElementById('listImportant');
       showImportantTask.classList.remove('d-none');
-    } else if (task.done === true && task.priority === false) {
+    } else if (task.isDone === true && task.isPriority === false) {
       
-      taskListDone.innerHTML += createTaskHTML(task, task.priority, task.done);
+      taskListDone.innerHTML += createTaskHTML(task, task.isPriority, task.isDone);
 
       let showDoneTask = document.getElementById('listDone');
       showDoneTask.classList.remove('d-none');
@@ -96,7 +102,7 @@ function displayTasks() {
 
     //Remove Done List if none of the Tasks Done 
 
-    let doneTaskfalse = tasks.filter(task => task.done === true);
+    let doneTaskfalse = tasks.filter(task => task.isDone === true);
     let doneTaskfalseCount = doneTaskfalse.length;
     if(doneTaskfalseCount === 0){
         let showDoneTask = document.getElementById('listDone');
@@ -105,7 +111,7 @@ function displayTasks() {
 
     //Remove Important List if none of the Tasks are important
 
-    let importantTaskfalse = tasks.filter(task => task.priority === true);
+    let importantTaskfalse = tasks.filter(task => task.isPriority === true);
     let importantTaskfalseCount = importantTaskfalse.length;
     if(importantTaskfalseCount === 0){
         let showDoneTask = document.getElementById('listImportant');
@@ -120,7 +126,7 @@ function displayTasks() {
 
 
 // This function adds a new task to the mock array and then displays it on the webpage.
-function addTask() {
+async function addTask() {
     // TODO:
     // 1. Get the input value from the taskInput element.
     let taskInput = document.getElementById("taskInput").value;
@@ -129,25 +135,47 @@ function addTask() {
    
     if(taskInput !== ''){
 
-        let task =
+        const task =
             {
-                id: currentId++, name: taskInput, done : false, priority : false
+                name: taskInput, isDone : false, isPriority : false
             
             };
-            console.log(task);
-        // 3. Push this task into the tasks array.
-        tasks.push(task);
-        // 4. Display this new task in the task list on the webpage.
-        // 5. Clear the input field.
+
+            try{
+                const response = await fetch(uri, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type' : 'application/json'
+                    },
+                    body: JSON.stringify(task)
+                });
+                
+                if(!response.ok){
+                    throw new Error('die Anfrage war nicht erfolgreich')
+                }
+                
+                await fetchData();
+                    
+            }
+            catch(error){
+                console.error('add task failed', error);
+            }
+           
+        
         const inputClear = document.getElementById('taskInput');
         inputClear.value = '';
         errorFunctionReverse();
+
     }else{
         errorFunction();
         
         toastError();
     }
+
     displayTasks();
+   
+    
 
 }
 
@@ -188,44 +216,97 @@ function toastError() {
 
 // This function deletes a task from the mock array based on its ID and refreshes the displayed list.
 function deleteTask(taskId) {
+    
+    fetch(`${uri}/${taskId}`,{
+        method: 'DELETE'
+    })
+    .then(async () => {
+        await fetchData();
+        displayTasks();
+    })
+    .catch(error => console.error('Unable to delete item.',error))
     // TODO:
     // 1. Filter out the task with the given ID from the tasks array.
-  tasks = tasks.filter(task => task.id !== taskId);
+   
     // 2. Call the displayTasks function to refresh the task list on the webpage.
-    displayTasks();
+    
 }
 
-function checkTask(taskId){
-    //tasks[taskId].done = !tasks[taskId].done;
+async function checkTask(taskId){
 
     let taskToCheck = tasks.find(task => task.id === taskId);
 
-    taskToCheck.done = !taskToCheck.done;
+    taskToCheck.isDone = !taskToCheck.isDone
 
-    if(taskToCheck.done === true && taskToCheck.priority === true){
-        taskToCheck.priority = false;
+    if(taskToCheck.isDone === true && taskToCheck.isPriority === true){
+        taskToCheck.isPriority = false;
        
     }
+    
+
    
+    try{
+        const response = await fetch(`${uri}/${taskId}` ,{
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type' : 'application/json'
+            },
+            body: JSON.stringify(taskToCheck)
+        });
+        
+        if(!response.ok){
+            throw new Error('Unable to check')
+        }
+        
+        await fetchData();
+            
+    }
+    catch(error){
+        console.error('Check task is not available', error);
+    }
+   
+
     displayTasks();
 }
 
-function priorityTask(taskId){
+
+
+
+async function priorityTask(taskId){
 
     let taskToPriority = tasks.find(task => task.id === taskId);
 
-    taskToPriority.priority = !taskToPriority.priority;
+    taskToPriority.isPriority = !taskToPriority.isPriority
 
+    if(taskToPriority.isDone === true && taskToPriority.isPriority === true){
+        taskToPriority.isDone = false;
+       
+    }
+    
 
-
-    if(taskToPriority.priority === true && taskToPriority.done === true){
-        taskToPriority.done = false;
+   
+    try{
+        const response = await fetch(`${uri}/${taskId}` ,{
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type' : 'application/json'
+            },
+            body: JSON.stringify(taskToPriority)
+        });
+        
+        if(!response.ok){
+            throw new Error('Unable to check')
         }
-    
+        
+        await fetchData();
+            
+    }
+    catch(error){
+        console.error('Important task is not available', error);
+    }
+   
+
     displayTasks();
-
-    
 }
-
-
-

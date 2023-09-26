@@ -2,9 +2,23 @@ using Microsoft.EntityFrameworkCore;
 using TodoApi;
 
 var builder = WebApplication.CreateBuilder(args);
+const string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 builder.Services.AddDbContext<TodoDb>(opt => opt.UseInMemoryDatabase("TodoList"));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+                      builder =>
+                      {
+                          builder.WithOrigins("http://localhost:5500", "http://127.0.0.1:5500")
+                          .AllowAnyHeader()
+                          .AllowAnyMethod();
+                      });
+});
 var app = builder.Build();
+app.UseCors(MyAllowSpecificOrigins);
+app.UseDefaultFiles();
+app.UseStaticFiles();
 
 RouteGroupBuilder todoItems = app.MapGroup("/todoitems");
 
