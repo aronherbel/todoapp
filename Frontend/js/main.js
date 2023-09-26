@@ -54,10 +54,10 @@ input.addEventListener("keypress", function(event){
 
 function createTaskHTML(task, isPriority, isDone) {
     return `
-      <li class="${isDone ? 'text-decoration-line-through' : ''} list-group-item d-flex justify-content-between align-items-center">
-        ${task.name}
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <i class="${isDone ? 'doneTaskActive' : ''} checkTask material-icons " onclick="checkTask(${task.id})">check_circle</i>
+            <span class="${isDone ? 'text-decoration-line-through' : ''} tasktext">${task.name}</span>
         <i class="${isPriority ? 'priorityStarActive' : ''} priorityTask material-icons" onclick="priorityTask(${task.id})">star</i>
-        <i class="checkTask material-icons" onclick="checkTask(${task.id})">check</i>
         <i class="${isDone ? 'priorityTaskActive' : ''} deleteTask material-icons" onclick="deleteTask(${task.id})">remove</i>
       </li>
       <hr>
